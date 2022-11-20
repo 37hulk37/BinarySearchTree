@@ -1,5 +1,10 @@
 #include <iostream>
-#include "BinarySearchtree.h"
+#include "BinarySearchTree.h"
+
+template<class T>
+void func(BinarySearchTree<T>& src) {
+
+}
 
 int main() {
     BinarySearchTree<double> tree;
@@ -13,9 +18,10 @@ int main() {
     tree.insert(1);
     tree.insert(7);
     tree.insert(7.6);
-    tree.insert(7.7);
+    tree.insert(7.5);
     tree.insert(9);
-    
+
+    std::cout << "height = " << tree.getHeight() << std::endl;
     std::cout << "size = " << tree.getSize()<< std::endl;
 
     std::ostream& out = std::cout;
@@ -27,9 +33,19 @@ int main() {
     std::cout << (tree.deleteKey(34) ? "true" : "false") << std::endl;
     std::cout << (tree.deleteKey(4) ? "true" : "false") << std::endl;
     std::cout << (tree.deleteKey(8) ? "true" : "false") << std::endl;
+
     std::cout << "size = " << tree.getSize()<< std::endl;
+    std::cout << "height = " << tree.getHeight() << std::endl;
     std::cout << "delete: ";
     tree.print(out);
+
+    std::cout << "recursive:" << std::endl;
+    tree.inorderWalk();
+    std::cout << "iterative:" << std::endl;
+    tree.iterativeInorderWalk();
+
+    BinarySearchTree<double> tree1 = std::move(tree);
+    func(tree1);
 
     return 0;
 }

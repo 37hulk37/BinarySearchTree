@@ -1,6 +1,8 @@
 #ifndef BINARYSEARCHTREE_BINARYSEARCHTREE_H
 #define BINARYSEARCHTREE_BINARYSEARCHTREE_H
 
+#include <queue>
+
 template<class T>
 class BinarySearchTree {
 private:
@@ -23,6 +25,8 @@ private:
     void printNode(std::ostream& out, Node<T>* cur) const;
     Node<T>* minRight(Node<T>* cur);
     size_t getSize(Node<T>* cur) const;
+    size_t getHeight(Node<T>* cur) const;
+    void inorderWalk(Node<T>* cur) const;
 
 public:
     BinarySearchTree() : root(nullptr), size(0) { }
@@ -58,19 +62,6 @@ BinarySearchTree<T>::~BinarySearchTree<T>() {
 }
 
 template<class T>
-void BinarySearchTree<T>::printNode(std::ostream& out, Node<T> *cur) const {
-    if (cur) {
-        if (cur->left) {
-            printNode(out, cur->left);
-        }
-        out << cur->key << " ";
-        if (cur->right) {
-            printNode(out, cur->right);
-        }
-    }
-}
-
-template<class T>
 BinarySearchTree<T>::BinarySearchTree(BinarySearchTree<T>&& src) noexcept {
     std::swap(root, src.root);
     std::swap(size, src.size);
@@ -88,6 +79,7 @@ template<class T>
 bool BinarySearchTree<T>::insert(const T& value) {
     if ( !root ) {
         root = new Node<T>(value);
+        size++;
     } else {
         Node<T>* cur = root;
 
@@ -194,6 +186,19 @@ bool BinarySearchTree<T>::deleteKey(const T& value) {
 }
 
 template<class T>
+void BinarySearchTree<T>::printNode(std::ostream& out, Node<T> *cur) const {
+    if (cur) {
+        if (cur->left) {
+            printNode(out, cur->left);
+        }
+        out << cur->key << " ";
+        if (cur->right) {
+            printNode(out, cur->right);
+        }
+    }
+}
+
+template<class T>
 void BinarySearchTree<T>::print(std::ostream& out) const {
     out << "{ ";
     printNode(out, root);
@@ -214,9 +219,50 @@ size_t BinarySearchTree<T>::getSize() const {
 }
 
 template<class T>
+size_t BinarySearchTree<T>::getHeight(Node<T>* cur) const {
+    if (cur == nullptr){
+        return 0;
+    }
+    return (1 + std::max(getHeight(cur->left), getHeight(cur->right)));
+}
+
+template<class T>
 size_t BinarySearchTree<T>::getHeight() const {
-    size_t height = 0;
-    return getHeight(&height);
+    return getHeight(root);
+}
+
+template<class T>
+void BinarySearchTree<T>::iterativeInorderWalk() const {
+    std::queue<Node<T>*> q;
+    Node<T>* cur = root;
+
+    q.push(cur);
+
+    while ( !q.empty() ) {
+        cur = q.front();
+        q.pop();
+        if (cur->left) {
+            q.push(cur->left);
+        }
+        if (cur->right) {
+            q.push(cur->right);
+        }
+        std::cout << "@" << cur->key << std::endl;
+    }
+}
+
+template<class T>
+void BinarySearchTree<T>::inorderWalk(Node<T>* cur) const {
+    if (cur) {
+        std::cout << "~" << cur->key << std::endl;
+        inorderWalk(cur->left);
+        inorderWalk(cur->right);
+    }
+}
+
+template<class T>
+void BinarySearchTree<T>::inorderWalk() const {
+    inorderWalk(root);
 }
 
 #endif //BINARYSEARCHTREE_BINARYSEARCHTREE_H
