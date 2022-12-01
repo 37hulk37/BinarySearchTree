@@ -42,7 +42,32 @@ int main() {
     std::cout << "recursive:" << std::endl;
     tree.inorderWalk();
     std::cout << "iterative:" << std::endl;
+    std::cout << "tree:" << std::endl;
     tree.iterativeInorderWalk();
+
+    BinarySearchTree<double> tree2;
+    tree2.insert(5);
+    tree2.insert(2);
+    tree2.insert(6);
+    tree2.insert(3);
+    tree2.insert(9);
+    tree2.insert(7);
+    tree2.insert(7.6);
+    tree2.insert(7.5);
+
+    std::cout << "tree2:" << std::endl;
+    tree2.iterativeInorderWalk();
+
+    std::cout << (tree.equals(tree2) ? "true" : "false") << std::endl;
+    tree.deleteKey(5);
+
+    std::cout << (tree.equals(tree2) ? "true" : "false") << std::endl;
+    std::cout << (tree.findSame(tree2) ? "true" : "false") << std::endl;
+
+    BinarySearchTree<double> tree3;
+    tree3.insert(89);
+
+    std::cout << (tree2.findSame(tree3) ? "true" : "false") << std::endl;
 
     BinarySearchTree<double> tree1 = std::move(tree);
     func(tree1);

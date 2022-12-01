@@ -1,7 +1,8 @@
 #ifndef BINARYSEARCHTREE_BINARYSEARCHTREE_H
 #define BINARYSEARCHTREE_BINARYSEARCHTREE_H
 
-#include <queue>
+#include "C:\Users\user\CLionProjects\Polytech\C++\CircularQueue\CircularQueue.h"
+#include <vector>
 
 template<class T>
 class BinarySearchTree {
@@ -18,7 +19,6 @@ private:
     };
 
     Node<T>* root;
-    size_t size;
 
     void deleteTree(Node<T>* cur);
     Node<T>*  iterativeSearchNode(const T& value) const;
@@ -27,9 +27,10 @@ private:
     size_t getSize(Node<T>* cur) const;
     size_t getHeight(Node<T>* cur) const;
     void inorderWalk(Node<T>* cur) const;
+    void inorderWalk(Node<T>* cur, const Node<T>* other, size_t& numEq) const;
 
 public:
-    BinarySearchTree() : root(nullptr), size(0) { }
+    BinarySearchTree() : root(nullptr) { }
     virtual ~BinarySearchTree();
 
     BinarySearchTree(BinarySearchTree<T>&& src) noexcept;
@@ -45,6 +46,9 @@ public:
     size_t getHeight() const;
     void iterativeInorderWalk() const;
     void inorderWalk() const;
+
+    bool equals(const BinarySearchTree<T>& other);
+    bool findSame(const BinarySearchTree<T>& other);
 };
 
 template<class T>
@@ -64,7 +68,6 @@ BinarySearchTree<T>::~BinarySearchTree<T>() {
 template<class T>
 BinarySearchTree<T>::BinarySearchTree(BinarySearchTree<T>&& src) noexcept {
     std::swap(root, src.root);
-    std::swap(size, src.size);
     src.root = nullptr;
 }
 
@@ -79,7 +82,6 @@ template<class T>
 bool BinarySearchTree<T>::insert(const T& value) {
     if ( !root ) {
         root = new Node<T>(value);
-        size++;
     } else {
         Node<T>* cur = root;
 
@@ -87,14 +89,12 @@ bool BinarySearchTree<T>::insert(const T& value) {
             if (value < cur->key && cur->left == nullptr) {
                 cur->left = new Node<T>(value);
                 cur->left->parent = cur;
-                size++;
                 return true;
             }
 
             if (value > cur->key && cur->right == nullptr) {
                 cur->right = new Node<T>(value);
                 cur->right->parent = cur;
-                size++;
                 return true;
             }
 
@@ -180,7 +180,6 @@ bool BinarySearchTree<T>::deleteKey(const T& value) {
             cur->key = tmp->key;
             delete tmp;
         }
-        size--;
     }
     return fl;
 }
@@ -233,19 +232,19 @@ size_t BinarySearchTree<T>::getHeight() const {
 
 template<class T>
 void BinarySearchTree<T>::iterativeInorderWalk() const {
-    std::queue<Node<T>*> q;
+    CircularQueue<Node<T>*> q(getHeight());
     Node<T>* cur = root;
 
-    q.push(cur);
+    q.enQueue(cur);
 
-    while ( !q.empty() ) {
+    while ( !q.isEmpty() ) {
         cur = q.front();
-        q.pop();
+        q.deQueue();
         if (cur->left) {
-            q.push(cur->left);
+            q.enQueue(cur->left);
         }
         if (cur->right) {
-            q.push(cur->right);
+            q.enQueue(cur->right);
         }
         std::cout << "@" << cur->key << std::endl;
     }
@@ -263,6 +262,40 @@ void BinarySearchTree<T>::inorderWalk(Node<T>* cur) const {
 template<class T>
 void BinarySearchTree<T>::inorderWalk() const {
     inorderWalk(root);
+}
+
+template<class T>
+void BinarySearchTree<T>::inorderWalk(Node<T>* cur, const Node<T>* other, size_t& numEq) const {
+    if (cur && other) {
+        if (cur->key == other->key) {
+            numEq++;
+        }
+
+        inorderWalk(cur->left, other->left, numEq);
+        inorderWalk(cur->right, other->right, numEq);
+    }
+}
+
+template<class T>
+bool BinarySearchTree<T>::equals(const BinarySearchTree<T>& other) {
+    size_t numEq = 0;
+
+    if (root->key == other.root->key) {
+        inorderWalk(root, other.root, numEq);
+    }
+
+    return numEq == getSize();
+}
+
+template<class T>
+bool BinarySearchTree<T>::findSame(const BinarySearchTree<T> &other) {
+    size_t numEq = 0;
+
+    if (root) {
+        inorderWalk(root, other.root, numEq);
+    }
+
+    return numEq > 0;
 }
 
 #endif //BINARYSEARCHTREE_BINARYSEARCHTREE_H
