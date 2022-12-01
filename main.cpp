@@ -62,15 +62,17 @@ int main() {
     tree.deleteKey(5);
 
     std::cout << (tree.equals(tree2) ? "true" : "false") << std::endl;
-    std::cout << (tree.findSame(tree2) ? "true" : "false") << std::endl;
+    std::cout << (tree.findSame(tree2) ? "found similarities" : "no coincidences") << std::endl;
 
     BinarySearchTree<double> tree3;
     tree3.insert(89);
 
-    std::cout << (tree2.findSame(tree3) ? "true" : "false") << std::endl;
+    std::cout << (tree2.findSame(tree3) ? "found similarities" : "no coincidences") << std::endl;
 
     BinarySearchTree<double> tree1 = std::move(tree);
     func(tree1);
+
+    std::cout << (tree3.findSame(tree1) ? "found similarities" : "no coincidences") << std::endl;
 
     return 0;
 }
