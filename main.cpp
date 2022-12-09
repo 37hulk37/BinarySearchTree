@@ -39,8 +39,8 @@ int main() {
     std::cout << "delete: ";
     tree.print(out);
 
-    std::cout << "recursive:" << std::endl;
-    tree.inorderWalk();
+    //std::cout << "recursive:" << std::endl;
+    //tree.inorderWalk();
     std::cout << "iterative:" << std::endl;
     std::cout << "tree:" << std::endl;
     tree.iterativeInorderWalk();
@@ -58,20 +58,28 @@ int main() {
     std::cout << "tree2:" << std::endl;
     tree2.iterativeInorderWalk();
 
+    tree.print(out);
+    tree2.print(out);
     std::cout << (tree.equals(tree2) ? "true" : "false") << std::endl;
     tree.deleteKey(5);
 
+    tree.print(out);
+    tree2.print(out);
     std::cout << (tree.equals(tree2) ? "true" : "false") << std::endl;
     std::cout << (tree.findSame(tree2) ? "found similarities" : "no coincidences") << std::endl;
 
     BinarySearchTree<double> tree3;
     tree3.insert(89);
 
+    tree2.print(out);
+    tree3.print(out);
     std::cout << (tree2.findSame(tree3) ? "found similarities" : "no coincidences") << std::endl;
 
     BinarySearchTree<double> tree1 = std::move(tree);
     func(tree1);
 
+    tree.print(out);
+    tree2.print(out);
     std::cout << (tree3.findSame(tree1) ? "found similarities" : "no coincidences") << std::endl;
 
     return 0;

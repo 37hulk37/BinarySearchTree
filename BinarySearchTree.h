@@ -26,7 +26,7 @@ private:
     Node<T>* minRight(Node<T>* cur);
     size_t getSize(Node<T>* cur) const;
     size_t getHeight(Node<T>* cur) const;
-    void inorderWalk(Node<T>* cur) const;
+    //void inorderWalk(Node<T>* cur) const;
     void inorderWalk(Node<T>* cur, const Node<T>* other, size_t& numEq) const;
 
 public:
@@ -144,8 +144,9 @@ bool BinarySearchTree<T>::deleteKey(const T& value) {
     if (cur) {
         fl = true;
 
+        Node<T>* parent = cur->parent;
         if (cur->left == nullptr && cur->right == nullptr) {
-            if (cur->key < cur->parent->key) {
+            if (cur->key < parent->key) {
                 cur->parent->left = nullptr;
             } else {
                 cur->parent->right = nullptr;
@@ -172,13 +173,9 @@ bool BinarySearchTree<T>::deleteKey(const T& value) {
             delete cur;
         } else {
             Node<T>* tmp = minRight(cur->right);
-            if (cur->key < root->key) {
-                tmp->parent->left = nullptr;
-            } else {
-                tmp->parent->right = nullptr;
-            }
-            cur->key = tmp->key;
-            delete tmp;
+            T replaceValue = tmp->key;
+            deleteKey(replaceValue);
+            cur->key = replaceValue;
         }
     }
     return fl;
@@ -250,14 +247,14 @@ void BinarySearchTree<T>::iterativeInorderWalk() const {
     }
 }
 
-template<class T>
-void BinarySearchTree<T>::inorderWalk(Node<T>* cur) const {
-    if (cur) {
-        std::cout << "~" << cur->key << std::endl;
-        inorderWalk(cur->left);
-        inorderWalk(cur->right);
-    }
-}
+//template<class T>
+//void BinarySearchTree<T>::inorderWalk(Node<T>* cur) const {
+//    if (cur) {
+//        std::cout << "~" << cur->key << std::endl;
+//        inorderWalk(cur->left);
+//        inorderWalk(cur->right);
+//    }
+//}
 
 template<class T>
 void BinarySearchTree<T>::inorderWalk() const {
