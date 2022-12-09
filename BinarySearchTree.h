@@ -23,6 +23,7 @@ private:
     void deleteTree(Node<T>* cur);
     Node<T>*  iterativeSearchNode(const T& value) const;
     void printNode(std::ostream& out, Node<T>* cur) const;
+    void deleteKey(Node<T>* cur);
     Node<T>* minRight(Node<T>* cur);
     size_t getSize(Node<T>* cur) const;
     size_t getHeight(Node<T>* cur) const;
@@ -137,48 +138,51 @@ class BinarySearchTree<T>::Node<T>* BinarySearchTree<T>::minRight(Node<T>* cur) 
 }
 
 template<class T>
-bool BinarySearchTree<T>::deleteKey(const T& value) {
+bool BinarySearchTree<T>::deleteKey(const T &value) {
     Node<T>* cur = iterativeSearchNode(value);
     bool fl = false;
 
     if (cur) {
         fl = true;
-
-        Node<T>* parent = cur->parent;
-        if (cur->left == nullptr && cur->right == nullptr) {
-            if (cur->key < parent->key) {
-                cur->parent->left = nullptr;
-            } else {
-                cur->parent->right = nullptr;
-            }
-            delete cur;
-        } else if (cur->left == nullptr || cur->right == nullptr) {
-            if (cur->left == nullptr) {
-                cur->right->parent = cur->parent;
-
-                if (cur->key < cur->parent->key) {
-                    cur->parent->left = cur->right;
-                } else {
-                    cur->parent->right = cur->right;
-                }
-            } else {
-                cur->left->parent = cur->parent;
-
-                if (cur->key < cur->parent->key) {
-                    cur->parent->left = cur->left;
-                } else {
-                    cur->parent->right = cur->left;
-                }
-            }
-            delete cur;
-        } else {
-            Node<T>* tmp = minRight(cur->right);
-            T replaceValue = tmp->key;
-            deleteKey(replaceValue);
-            cur->key = replaceValue;
-        }
+        deleteKey(cur);
     }
     return fl;
+}
+
+template<class T>
+void BinarySearchTree<T>::deleteKey(Node<T>* cur) {
+    if (cur->left == nullptr && cur->right == nullptr) {
+        if (cur->key < cur->parent->key) {
+            cur->parent->left = nullptr;
+        } else {
+            cur->parent->right = nullptr;
+        }
+        delete cur;
+    } else if (cur->left == nullptr || cur->right == nullptr) {
+        if (cur->left == nullptr) {
+            cur->right->parent = cur->parent;
+
+            if (cur->key < cur->parent->key) {
+                cur->parent->left = cur->right;
+            } else {
+                cur->parent->right = cur->right;
+            }
+        } else {
+            cur->left->parent = cur->parent;
+
+            if (cur->key < cur->parent->key) {
+                cur->parent->left = cur->left;
+            } else {
+                cur->parent->right = cur->left;
+            }
+        }
+        delete cur;
+    } else {
+        Node<T>* tmp = minRight(cur->right);
+        T replaceValue = tmp->key;
+        deleteKey(tmp);
+        cur->key = replaceValue;
+    }
 }
 
 template<class T>
