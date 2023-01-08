@@ -31,7 +31,7 @@ int main() {
 
     std::cout << (tree.deleteKey(1) ? "true" : "false") << std::endl;
     std::cout << (tree.deleteKey(34) ? "true" : "false") << std::endl;
-    std::cout << (tree.deleteKey(4) ? "true" : "false") << std::endl;
+    std::cout << (tree.deleteKey(2) ? "true" : "false") << std::endl;
     std::cout << (tree.deleteKey(8) ? "true" : "false") << std::endl;
 
     std::cout << "size = " << tree.getSize()<< std::endl;
@@ -81,6 +81,8 @@ int main() {
     tree.print(out);
     tree2.print(out);
     std::cout << (tree3.findSame(tree1) ? "found similarities" : "no coincidences") << std::endl;
+
+    tree = std::move(tree2);
 
     return 0;
 }
