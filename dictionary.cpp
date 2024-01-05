@@ -23,7 +23,7 @@ void dictionary::remove(const std::string &key) {
 void dictionary::loadDictionary() {
     std::ifstream dictFile(pathToDict, std::ios::in);
     if ( !dictFile.is_open()) {
-        return;
+        throw std::runtime_error(std::format("Can not open file with name {}", pathToDict));
     }
 
     std::string str;
@@ -36,10 +36,8 @@ void dictionary::loadDictionary() {
 void dictionary::addNodeToDictionary(const std::string& word, const std::vector<std::string>& translations) {
     const auto nodeOpt = tree.iterativeSearch(word);
     if (nodeOpt.has_value()) {
-        tree.compute(nodeOpt.value(), [&translations] (
-                const auto& k,
-                std::vector<std::string>& v
-        ) -> std::vector<std::string> {
+        tree.compute(nodeOpt.value(),
+                     [&translations](const auto& k, auto& v)-> std::vector<std::string> {
             for (const auto& t: translations) {
                 v.emplace_back(t);
             }

@@ -10,6 +10,7 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include <format>
 
 template<class K, class V>
 class search_tree {
@@ -134,9 +135,10 @@ template<class K, class V>
 void search_tree<K, V>::deleteKey(const K &value) {
     auto curtOpt = searchNode(value);
 
-    if (curtOpt.has_value()) {
-        deleteKey(curtOpt.value());
+    if ( !curtOpt.has_value()) {
+       throw std::runtime_error(std::format("There is no word {}", value));
     }
+    deleteKey(curtOpt.value());
 }
 
 template<class K, class V>

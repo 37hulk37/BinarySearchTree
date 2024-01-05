@@ -7,4 +7,5 @@ add_executable(binary-search-tree main.cpp
         search_tree.h
         dictionary.cpp
         dictionary.h
-        tree_node.h)
+        tree_node.h
+)
