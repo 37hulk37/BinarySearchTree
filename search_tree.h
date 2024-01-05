@@ -17,7 +17,7 @@ private:
     tree_node<K, V>* root;
 
     void deleteTree(tree_node<K, V>* cur);
-    tree_node<K, V>*  iterativeSearchNode(const K& value) const;
+    std::optional<tree_node<K, V>*> searchNode(const K& value) const;
     void deleteKey(tree_node<K, V>* cur);
     tree_node<K, V>* minRight(tree_node<K, V>* cur);
     size_t getSize(tree_node<K, V>* cur) const;
@@ -33,7 +33,7 @@ public:
     search_tree<K, V>& operator=(search_tree<K, V>& src) = delete;
 
     void insert(const K& key, const V& v);
-    bool deleteKey(const K& value);
+    void deleteKey(const K& value);
     std::optional<tree_node<K, V>*> iterativeSearch(const K& value);
     size_t getSize() const;
     size_t getHeight() const;
@@ -41,7 +41,7 @@ public:
     template <class K1, class V1>
     friend std::ostream &operator<<(std::ostream &os, const search_tree<K1, V1> &tree);
 
-    V compute(const K& key, const std::function<V(const K&, V&)>& function);
+    V compute(tree_node<K, V>* node, const std::function<V(const K&, V&)>& function);
 };
 
 template<class K, class V>
@@ -51,11 +51,12 @@ search_tree<K, V>::~search_tree() {
 
 template<class K, class V>
 void search_tree<K, V>::deleteTree(tree_node<K, V> *cur) {
-    if (cur) {
-        deleteTree(cur->left);
-        deleteTree(cur->right);
-        delete cur;
+    if (!cur) {
+        return;
     }
+    deleteTree(cur->left);
+    deleteTree(cur->right);
+    delete cur;
 }
 
 template<class K, class V>
@@ -101,7 +102,7 @@ void search_tree<K, V>::insert(const K& key, const V& v) {
 }
 
 template<class K, class V>
-class tree_node<K, V>* search_tree<K, V>::iterativeSearchNode(const K& value) const {
+class std::optional<tree_node<K, V>*> search_tree<K, V>::searchNode(const K& value) const {
     tree_node<K, V>* cur = root;
     if (!cur) {
         return cur;
@@ -113,13 +114,12 @@ class tree_node<K, V>* search_tree<K, V>::iterativeSearchNode(const K& value) co
             cur = cur->right;
         }
     }
-    return cur;
+    return (cur != nullptr ? std::optional(cur) : std::nullopt);
 }
 
 template<class K, class V>
 std::optional<tree_node<K, V>*> search_tree<K, V>::iterativeSearch(const K& value) {
-    auto node = iterativeSearchNode(value);
-    return (node != nullptr ? std::optional{ node } : std::nullopt);
+    return searchNode(value);
 }
 
 template<class K, class V>
@@ -131,15 +131,12 @@ class tree_node<K, V>* search_tree<K, V>::minRight(tree_node<K, V>* cur) {
 }
 
 template<class K, class V>
-bool search_tree<K, V>::deleteKey(const K &value) {
-    tree_node<K, V>* cur = iterativeSearchNode(value);
-    bool fl = false;
+void search_tree<K, V>::deleteKey(const K &value) {
+    auto curtOpt = searchNode(value);
 
-    if (cur) {
-        fl = true;
-        deleteKey(cur);
+    if (curtOpt.has_value()) {
+        deleteKey(curtOpt.value());
     }
-    return fl;
 }
 
 template<class K, class V>
@@ -205,8 +202,7 @@ size_t search_tree<K, V>::getHeight() const {
 }
 
 template<class K, class V>
-V search_tree<K, V>::compute(const K &key, const std::function<V(const K&, V&)>& function) {
-    auto node = iterativeSearchNode(key);
+V search_tree<K, V>::compute(tree_node<K, V>* node, const std::function<V(const K&, V&)>& function) {
     return std::apply(function, std::forward_as_tuple(node->key, node->value));
 }
 

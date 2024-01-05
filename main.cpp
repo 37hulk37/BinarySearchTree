@@ -9,7 +9,8 @@ int main() {
 
     dict.remove("axe");
 
-    dict.add("cs", std::vector<std::string> {"23", "34"});
+    dict.add("plane", std::vector<std::string> {"b777", "b787"});
+    dict.add("samsung", std::vector<std::string> {"a23", "a22"});
 
     auto translations = dict.search("plane");
 

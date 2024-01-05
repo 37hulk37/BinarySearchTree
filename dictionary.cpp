@@ -34,9 +34,9 @@ void dictionary::loadDictionary() {
 }
 
 void dictionary::addNodeToDictionary(const std::string& word, const std::vector<std::string>& translations) {
-    auto opt = tree.iterativeSearch(word);
-    if (opt.has_value()) {
-        tree.compute(word,[&translations] (
+    const auto nodeOpt = tree.iterativeSearch(word);
+    if (nodeOpt.has_value()) {
+        tree.compute(nodeOpt.value(), [&translations] (
                 const auto& k,
                 std::vector<std::string>& v
         ) -> std::vector<std::string> {
@@ -48,6 +48,7 @@ void dictionary::addNodeToDictionary(const std::string& word, const std::vector<
     } else {
         tree.insert(word, translations);
     }
+
 }
 
 std::vector<std::string> dictionary::split(const std::string &str, char separator) {
