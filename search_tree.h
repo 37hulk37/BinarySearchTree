@@ -225,7 +225,7 @@ std::ostream &operator<<(std::ostream &os, const search_tree<K, V> &tree) {
         if (cur->right) {
             q.push(cur->right);
         }
-        std::cout << cur << std::endl;
+        std::cout << *cur << std::endl;
     }
     return os;
 }
