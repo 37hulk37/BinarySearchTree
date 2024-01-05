@@ -48,7 +48,6 @@ void dictionary::addNodeToDictionary(const std::string& word, const std::vector<
     } else {
         tree.insert(word, translations);
     }
-
 }
 
 std::vector<std::string> dictionary::split(const std::string &str, char separator) {

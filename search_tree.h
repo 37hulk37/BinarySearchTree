@@ -105,7 +105,7 @@ template<class K, class V>
 class std::optional<tree_node<K, V>*> search_tree<K, V>::searchNode(const K& value) const {
     tree_node<K, V>* cur = root;
     if (!cur) {
-        return cur;
+        return std::nullopt;
     }
     while (cur && cur->key != value) {
         if (value < cur->key) {
@@ -203,7 +203,7 @@ size_t search_tree<K, V>::getHeight() const {
 
 template<class K, class V>
 V search_tree<K, V>::compute(tree_node<K, V>* node, const std::function<V(const K&, V&)>& function) {
-    return std::apply(function, std::forward_as_tuple(node->key, node->value));
+    return std::apply(function,std::forward_as_tuple(node->key, node->value));
 }
 
 template<class K, class V>
