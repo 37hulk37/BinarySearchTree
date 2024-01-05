@@ -2,22 +2,48 @@
 #define BINARY_SEARCH_TREE_TREE_NODE_H
 
 #include <vector>
+#include <string>
 
-template <class U1, class U2>
+template <class K, class V>
 class tree_node {
-    U1 key;
-    tree_node<U1, U2>* left;
-    tree_node<U1, U2>* right;
-    tree_node<U1, U2>* parent;
-    std::vector<U2> values;
+public:
+    K key;
+    V value;
+    tree_node<K, V>* left;
+    tree_node<K, V>* right;
+    tree_node<K, V>* parent;
 
-    explicit tree_node(U1 k, tree_node<U1, U2>* l = nullptr, tree_node<U1, U2>* r = nullptr, tree_node<U1, U2>* p = nullptr) :
-            key(k), left(l), right(r), parent(p), values(4) { };
+    explicit tree_node(
+            K k,
+            V v,
+            tree_node<K, V>* l = nullptr,
+            tree_node<K, V>* r = nullptr,
+            tree_node<K, V>* p = nullptr
+   ) : key(k), left(l), right(r), parent(p), value(v) { }
 
-    bool operator<(const tree_node<U1, U2> &rhs) const {
+    bool operator<(const tree_node<K, V> &rhs) const {
         return key < rhs.key;
     }
+
+    template <class K1, class V1>
+    friend std::ostream &operator<<(std::ostream &os, const tree_node<K1, V1>& treeNode);
 };
+
+template <class K, class V>
+std::ostream &operator<<(std::ostream &os, const tree_node<K, V>& node) {
+    os << "{" << node.key << ": " << node.value << "};";
+    return os;
+}
+
+template <class K, class V2>
+std::ostream &operator<<(std::ostream &os, const tree_node<K, std::vector<V2>>& node) {
+    os << "\n" << node.key << ": [ ";
+    for (auto v: node.value) {
+        os << v << ", ";
+    }
+    os << "]";
+    return os;
+}
 
 
 #endif //BINARY_SEARCH_TREE_TREE_NODE_H
