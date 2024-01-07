@@ -14,8 +14,6 @@ private:
 
     void loadDictionary();
 
-    void addNodeToDictionary(const std::string& key, const std::vector<std::string>& splittedString);
-
     static std::vector<std::string> split(const std::string& str, char separator);
 
 public:
@@ -30,7 +28,7 @@ public:
 
     void remove(const std::string& key);
 
-    friend std::ostream &operator<<(std::ostream &os, const dictionary &dictionary);
+    friend std::ostream &operator<<(std::ostream& os, const dictionary& dictionary);
 };
 
 

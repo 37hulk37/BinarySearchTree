@@ -18,7 +18,6 @@ private:
     tree_node<K, V>* root;
 
     void deleteTree(tree_node<K, V>* cur);
-    std::optional<tree_node<K, V>*> searchNode(const K& value) const;
     void deleteKey(tree_node<K, V>* cur);
     tree_node<K, V>* minRight(tree_node<K, V>* cur);
     size_t getSize(tree_node<K, V>* cur) const;
@@ -35,7 +34,7 @@ public:
 
     void insert(const K& key, const V& v);
     void deleteKey(const K& value);
-    std::optional<tree_node<K, V>*> iterativeSearch(const K& value);
+    std::optional<tree_node<K, V>*> searchNode(const K& value) const;
     size_t getSize() const;
     size_t getHeight() const;
 
@@ -116,11 +115,6 @@ class std::optional<tree_node<K, V>*> search_tree<K, V>::searchNode(const K& val
         }
     }
     return (cur != nullptr ? std::optional(cur) : std::nullopt);
-}
-
-template<class K, class V>
-std::optional<tree_node<K, V>*> search_tree<K, V>::iterativeSearch(const K& value) {
-    return searchNode(value);
 }
 
 template<class K, class V>
